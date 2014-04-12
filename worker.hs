@@ -2,18 +2,20 @@
 
 module Main where
 import Haste
-import Control.Monad (when)
 
-foreign import ccall on_message :: JSFun (String -> IO ()) -> IO ()
+foreign import ccall on_message :: JSFun (JSString -> IO ()) -> IO ()
 foreign import ccall send_message :: JSString -> IO ()
 
-message :: (String -> IO ()) -> IO ()
+message :: (JSString -> IO ()) -> IO ()
 message f = on_message $ mkCallback f
 
-send :: String -> IO ()
-send message = send_message (toJSString message)
+send :: JSString -> IO ()
+send message = send_message message
+
+response :: JSString ->  JSString 
+response s = toJSString $ "Worker: Recieved, " ++ s'
+    where Just s' = fromJSString s
 
 main = do
-    send "Hello von Web Worker"
-    message (\x -> send x)
-
+    send $ toJSString "Worker: Hello"
+    message (\x -> send (response x))

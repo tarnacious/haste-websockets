@@ -1,7 +1,10 @@
-ffi.js: ffi.hs wrapper.js
-	hastec ffi.hs --with-js=wrapper.js --debug
+worker.js: worker.hs worker-funs.js
+	hastec worker.hs --with-js=worker-funs.js --start=asap
 
-worker.js: worker.hs worker-functions.js
-	hastec worker.hs --with-js=worker-functions.js --debug --start=asap
+main.js: main.hs main-funs.js
+	hastec main.hs --with-js=main-funs.js
 
-all: worker.js ffi.js
+clean:
+	rm -rf worker.js main.js *.o *.hi main
+
+all: worker.js main.js
