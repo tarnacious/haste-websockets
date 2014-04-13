@@ -16,19 +16,13 @@ message worker f = on_message worker $ mkCallback f
 send :: Worker -> JSString -> IO ()
 send worker message = send_message worker message
 
-append_message :: Elem -> String -> IO ()
-append_message el s = do
-    c <- getProp el "innerHTML"
-    setProp el "innerHTML" $ c ++ "<br>" ++ s
-
 handle_message :: Elem -> JSString -> IO ()
-handle_message el s = append_message el s'
+handle_message el s = setProp el "innerHTML" s'
     where Just s' = fromJSString s
 
 main = do
     Just el <- elemById "output"
     worker <- make_worker (toJSString "worker.js")
     message worker (\s -> handle_message el s) 
-    send worker $ toJSString "Hello worker!"
     
 
