@@ -7,14 +7,9 @@ newtype Worker = Worker JSAny
 
 foreign import ccall make_worker :: JSString -> IO Worker
 foreign import ccall on_message :: Worker -> JSFun (JSString -> IO ()) -> IO ()
-foreign import ccall send_message :: Worker -> JSString -> IO ()
-foreign import ccall log_message :: JSString -> IO ()
 
 message :: Worker -> (JSString -> IO ()) -> IO ()
 message worker f = on_message worker $ mkCallback f
-
-send :: Worker -> JSString -> IO ()
-send worker message = send_message worker message
 
 handle_message :: Elem -> JSString -> IO ()
 handle_message el s = setProp el "innerHTML" s'
