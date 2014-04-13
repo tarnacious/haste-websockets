@@ -4,6 +4,6 @@ function on_message(callback) {
     }
 }
 
-function send_message(message) {
+function post_message(message) {
     postMessage(message);
 }
